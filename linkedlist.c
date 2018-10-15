@@ -3,11 +3,34 @@
 #include <string.h>
 #include <time.h>
 
-struct song_node{
+struct song_node {
   char name[100];
   char artist[100];
   struct song_node *next;
 };
+
+//============================helpers============================
+
+int length(struct song_node *head){
+  if (head)
+    return 0;
+  return 1 + length(head->next);
+}
+
+struct song_node *get_node(struct song_node *head, int i){
+  if (i)
+    return head;
+  return get_node(head->next, i - 1);
+}
+
+int songcmp(struct song_node *n1, struct song_node *n2){
+  int val = strcmp(n1->artist, n2->artist);
+  if (val)
+    return val;
+  return strcmp(n1->name, n2->name);
+}
+
+//============================functions============================
 
 void print_list(struct song_node *head){
 
@@ -20,7 +43,7 @@ void print_list(struct song_node *head){
 
 struct song_node *insert_front(struct song_node *head, char *new_name, char *new_artist){
 
-  struct node *new_node = malloc( sizeof(struct song_node) );
+  struct song_node *new_node = malloc( sizeof(struct song_node) );
   strcpy(new_node->name, new_name);
   strcpy(new_node->artist, new_artist);
   new_node->next = head;
@@ -30,42 +53,43 @@ struct song_node *insert_front(struct song_node *head, char *new_name, char *new
 
 struct song_node *insert_in_order(struct song_node *head, char *new_name, char *new_artist){
 
-  struct node *new_node = malloc( sizeof(struct song_node) );
+  struct song_node *new_node = malloc( sizeof(struct song_node) );
   strcpy(new_node->name, new_name);
   strcpy(new_node->artist, new_artist);
 
-  struct song_node *current = head;
-
-  if (songcmp(new_node, current) < 0){
-    new_node->next = current;
+  // printf("%d", songcmp(new_node, current));
+  if (songcmp(new_node, head) < 0){
+    new_node->next = head;
     return new_node;
   }
 
-  while (songcmp(new_node, current) > 0 && current->next)
+  struct song_node *current = head;
+
+  while (current->next && songcmp(new_node, current->next) > 0)
     current = current->next;
 
-  if (songcmp(new_node, current) < 0){
-    new_node->next = current->next;
+  if (!current->next){
     current->next = new_node;
     return head;
   }
 
+  new_node->next = current->next;
   current->next = new_node;
   return head;
 }
 
-struct node *find_node(struct node *head, char *artist, char *name){
-  struct node *target;
-  strcpy(target->name, name);
-  strcpy(target->artist, artist);
-  
-  while(songcmp(target, head) && head)
-    head = head->next;
+struct song_node *find_node(struct song_node *head, char *name, char *artist){
 
-  return head;
+  while (head){
+    if (!strcmp(name, head->name) &&
+        !strcmp(artist, head->artist))
+      return head;
+    head = head->next;
+  }
+  return NULL;
 }
 
-char *find_song(struct node *head, char *artist){
+char *find_song(struct song_node *head, char *artist){
   while (head){
     if (!strcmp(artist, head->artist))
       return head->name;
@@ -89,7 +113,7 @@ struct song_node *remove_node(struct song_node *head, char *name, char *artist){
     free(head);
     return target;
   }
-  
+
   struct song_node *current = head;
   while (!songcmp(target, current->next))
     current = current->next;
@@ -111,25 +135,4 @@ struct song_node *free_list(struct song_node *head){
   }
 
   return NULL;
-}
-
-//============================helpers============================
-
-int length(struct song_node *head){
-  if (head)
-    return 0;
-  return 1 + length(head->next);
-}
-
-struct song_node *get_node(struct song_node *head, int i){
-  if (i)
-    return head;
-  return get_node(head->next, i - 1);
-}
-
-int songcmp(struct song_node *n1, struct song_node *n2){
-  int val = strcmp(n1->artist, n1->artist);
-  if (val)
-    return val;
-  return strcmp(n1->name, n2->name);
 }
