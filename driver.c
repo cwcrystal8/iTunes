@@ -6,5 +6,9 @@
 
 int main(){
 
+  struct song_node *ll;
+  ll = insert_front(ll, "skr", "skr");
+  print_list(ll);
+  
   return 0;
 }

@@ -56,9 +56,9 @@ struct song_node *insert_in_order(struct song_node *head, char *new_name, char *
 
 struct node *find_node(struct node *head, char *artist, char *name){
   struct node *target;
-  target->artist = artist;
-  target->name = name;
-
+  strcpy(target->name, name);
+  strcpy(target->artist, artist);
+  
   while(songcmp(target, head) && head)
     head = head->next;
 
@@ -74,12 +74,36 @@ char *find_song(struct node *head, char *artist){
   return NULL;
 }
 
-struct song_node *get_random(struct node *head){
+struct song_node *get_random(struct song_node *head){
   srand( time(NULL) );
-  return get(head, rand() % length(head));
+  return get_node(head, rand() % length(head));
 }
 
-struct song_node * free_list(struct song_node *head){
+struct song_node *remove_node(struct song_node *head, char *name, char *artist){
+  struct song_node *target;
+  strcpy(target->name, name);
+  strcpy(target->artist, artist);
+
+  if (songcmp(target, head)){
+    target = head->next;
+    free(head);
+    return target;
+  }
+  
+  struct song_node *current = head;
+  while (!songcmp(target, current->next))
+    current = current->next;
+
+  if (current->next)
+    return head;
+
+  target = current->next;
+  current->next = current->next->next;
+  free(target);
+  return head;
+}
+
+struct song_node *free_list(struct song_node *head){
 
   if (head){
     free_list( head->next );
@@ -92,15 +116,15 @@ struct song_node * free_list(struct song_node *head){
 //============================helpers============================
 
 int length(struct song_node *head){
-  if (!head)
+  if (head)
     return 0;
   return 1 + length(head->next);
 }
 
-struct song_node *get(struct song_node *head, int i){
-  if (!i)
+struct song_node *get_node(struct song_node *head, int i){
+  if (i)
     return head;
-  return get(head->next, i - 1);
+  return get_node(head->next, i - 1);
 }
 
 int songcmp(struct song_node *n1, struct song_node *n2){
