@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 struct song_node {
   char name[100];
@@ -12,13 +11,13 @@ struct song_node {
 //============================helpers============================
 
 int length(struct song_node *head){
-  if (head)
+  if (!head)
     return 0;
   return 1 + length(head->next);
 }
 
 struct song_node *get_node(struct song_node *head, int i){
-  if (i)
+  if (!i)
     return head;
   return get_node(head->next, i - 1);
 }
@@ -32,11 +31,18 @@ int songcmp(struct song_node *n1, struct song_node *n2){
 
 //============================functions============================
 
+void print_node(struct song_node *n){
+  printf("%s - %s\n", n->artist, n->name);
+}
+
 void print_list(struct song_node *head){
 
-  if (head){
-    printf("%s - %s\n", head->artist, head->name);
+  if (!head)
+    printf("\n");
+  else {
+    print_node(head);
     print_list(head->next);
+    //head = head->next;
   }
 
 }
@@ -80,16 +86,17 @@ struct song_node *insert_in_order(struct song_node *head, char *new_name, char *
 
 struct song_node *find_node(struct song_node *head, char *name, char *artist){
 
+  
   while (head){
     if (!strcmp(name, head->name) &&
         !strcmp(artist, head->artist))
       return head;
     head = head->next;
   }
-  return NULL;
+  return head;
 }
 
-char *find_song(struct song_node *head, char *artist){
+char *find_artist(struct song_node *head, char *artist){
   while (head){
     if (!strcmp(artist, head->artist))
       return head->name;
@@ -99,7 +106,6 @@ char *find_song(struct song_node *head, char *artist){
 }
 
 struct song_node *get_random(struct song_node *head){
-  srand( time(NULL) );
   return get_node(head, rand() % length(head));
 }
 
@@ -108,22 +114,23 @@ struct song_node *remove_node(struct song_node *head, char *name, char *artist){
   strcpy(target->name, name);
   strcpy(target->artist, artist);
 
-  if (songcmp(target, head)){
-    target = head->next;
+  struct song_node *temp;
+  if (!songcmp(target, head)){
+    temp = head->next;
     free(head);
-    return target;
+    return temp;
   }
 
   struct song_node *current = head;
-  while (!songcmp(target, current->next))
+  while (current->next && songcmp(target, current->next))
     current = current->next;
 
-  if (current->next)
+  if (!current->next)
     return head;
 
-  target = current->next;
+  temp = current->next;
   current->next = current->next->next;
-  free(target);
+  free(temp);
   return head;
 }
 
