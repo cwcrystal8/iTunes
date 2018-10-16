@@ -23,11 +23,11 @@ int main(){
 
   printf("LINKED LIST TESTS\n====================================\n\nTesting print_list:\n");
   print_list(ll);
-  
+
   printf("====================================\n\n");
   printf("Testing print_node\n");
   print_node(ll);
-  
+
   printf("====================================\n\n");
   printf("Testing find_node\n");
   struct song_node *target;
@@ -57,13 +57,13 @@ int main(){
 
   song = find_artist(ll, "dgre");
   printf("looking for first song by dgre (does not exist): %p\n", song);
-  
+
   printf("====================================\n\n");
   printf("Testing songcmp (helper function)\n");
   printf("comparing abs - ui to itself: %d\n", songcmp(ll, ll));
   printf("comparing abs - ui to oof - smd: %d\n", songcmp(ll, ll->next->next->next));
   printf("comparing n0 u - qwer to alpha - tau: %d\n", songcmp(ll->next->next, ll->next));
-  
+
   printf("====================================\n\n");
   printf("Testing random\n");
   srand( time(NULL) );
@@ -90,12 +90,10 @@ int main(){
   print_list(ll);
 
   printf("====================================\n\n");
-  printf("Testing remove\n");
-  printf("REPLACE LATER\n");
-
-  printf("====================================\n\n");
   printf("Testing free_list\n");
-  printf("REPLACE LATER\n");
+  ll = free_list(ll);
+  printf("list after free_list: \n");
+  print_list(ll);
 
   printf("====================================\n\n");
   printf("MUSIC LIBRARY TESTS\n");
@@ -138,7 +136,7 @@ int main(){
 
   printf("====================================\n\n");
 
-  
+
 
   printf("\n");
   printf("\n");

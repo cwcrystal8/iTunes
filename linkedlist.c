@@ -86,7 +86,7 @@ struct song_node *insert_in_order(struct song_node *head, char *new_name, char *
 
 struct song_node *find_node(struct song_node *head, char *name, char *artist){
 
-  
+
   while (head){
     if (!strcmp(name, head->name) &&
         !strcmp(artist, head->artist))
@@ -138,6 +138,8 @@ struct song_node *free_list(struct song_node *head){
 
   if (head){
     free_list( head->next );
+    printf("freeing node: ");
+    print_node(head);
     free(head);
   }
 
