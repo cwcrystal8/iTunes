@@ -1,3 +1,6 @@
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+
 struct song_node {
   char name[100];
   char artist[100];
@@ -29,3 +32,5 @@ struct song_node *get_random(struct song_node *head);
 struct song_node *remove_node(struct song_node *head, char *name, char *artist);
 
 struct song_node *free_list(struct song_node *head);
+
+#endif
