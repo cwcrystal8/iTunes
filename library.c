@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
 #include "linkedlist.h"
 #include "library.h"
 
@@ -90,8 +85,9 @@ void print_library(struct song_node* table[27]){
 }
 
 void shuffle(struct song_node* table[27]){
-  srand(time(NULL));
-  int indices[9] = {rand(), rand(), rand(),rand(), rand(), rand(),rand(), rand(), rand()};
+  int indices[9];
+  for (int i = 0; i < 9; i ++)
+    indices[i] = rand();
   int i = 0;
   while(i < 9){
     int letter = (indices[i] % 26);
