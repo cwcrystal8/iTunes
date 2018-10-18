@@ -1,6 +1,8 @@
+//#include "linkedlist.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 struct song_node {
   char name[100];
@@ -62,7 +64,7 @@ struct song_node *insert_in_order(struct song_node *head, char *new_name, char *
   struct song_node *new_node = malloc( sizeof(struct song_node) );
   strcpy(new_node->name, new_name);
   strcpy(new_node->artist, new_artist);
-
+  new_node -> next = NULL;
   // printf("%d", songcmp(new_node, current));
   if (songcmp(new_node, head) < 0){
     new_node->next = head;
@@ -96,16 +98,17 @@ struct song_node *find_node(struct song_node *head, char *name, char *artist){
   return head;
 }
 
-char *find_artist(struct song_node *head, char *artist){
+struct song_node *find_artist(struct song_node *head, char *artist){
   while (head){
     if (!strcmp(artist, head->artist))
-      return head->name;
+      return head;
     head = head->next;
   }
   return NULL;
 }
 
 struct song_node *get_random(struct song_node *head){
+  srand(time(NULL));
   return get_node(head, rand() % length(head));
 }
 
@@ -137,9 +140,9 @@ struct song_node *remove_node(struct song_node *head, char *name, char *artist){
 struct song_node *free_list(struct song_node *head){
 
   if (head){
-    free_list( head->next );
     printf("freeing node: ");
     print_node(head);
+    free_list( head->next );
     free(head);
   }
 
